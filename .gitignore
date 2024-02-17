@@ -1,2 +1,4 @@
-./vars/
+.DS_Store
+.DS_Store?
+vars/
 playwright.config.ts
