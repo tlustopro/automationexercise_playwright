@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker/locale/en';
 import { log } from 'console';
 import { LoginPage } from '../pages/login.page';
+import { HomePage } from '../pages/home.page';
 
 test.describe('User management', () => {
-  test('signup', async ({ page }) => {
-    await page.goto('/');
-    await expect(page).toHaveTitle(/Automation Exercise/);
-    await page.getByRole('link', { name: ' Signup / Login' }).click();
-    await expect(page).toHaveTitle(/Automation Exercise - Signup/);
+  test('TC_01_register', async ({ page }) => {
+    const homepage = new HomePage(page);
+
+    await homepage.OpenLoginPage();
     //filling up name and email for future usage and clicking on signup button
     await page.getByPlaceholder('Name').fill(faker.person.fullName()); 
     await page.getByTestId('signup-email').fill(faker.internet.email()); 
@@ -52,28 +52,37 @@ test.describe('User management', () => {
     //redirect on homepage
     await page.getByTestId('continue-button').click();
     });
-  test('valid login', async ({ page }) => {
+  test('TC_02_valid_login', async ({ page }) => {
     const login = new LoginPage(page);
+    const homepage = new HomePage(page);
 
-    await page.goto('/');
-    await expect(page).toHaveTitle(/Automation Exercise/);
-    await page.getByRole('link', { name: ' Signup / Login' }).click();
-    await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
-    await login.enterLoginEmail(process.env.USERNAME!);
-    await login.enterLoginPassword(process.env.PASSWORD!);
-    await login.clickLoginButton();
+    await homepage.OpenLoginPage();
+    await login.logIn(process.env.USERNAME!, process.env.PASSWORD!)
     await expect(page.getByRole('link', { name: 'Delete Account' })).toBeVisible();
   });
-  test('invalid login', async ({ page }) => {
+  test('TC_03_invalid_login', async ({ page }) => {
     const login = new LoginPage(page);
+    const homepage = new HomePage(page);
 
-    await page.goto('/');
-    await expect(page).toHaveTitle(/Automation Exercise/);
-    await page.getByRole('link', { name: ' Signup / Login' }).click();
-    await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
-    await login.enterLoginEmail('denis@gmail.com');
-    await login.enterLoginPassword('123');
-    await login.clickLoginButton();
+    await homepage.OpenLoginPage();
+    await login.logIn('denis@gmail.com', '123')
     await expect(page.locator("text=Your email or password is incorrect!")).toBeVisible()
+  });
+  test('TC_04_logout', async ({ page }) => {
+    const login = new LoginPage(page);
+    const homepage = new HomePage(page);
+
+    await homepage.OpenLoginPage();
+    await login.logIn(process.env.USERNAME!, process.env.PASSWORD!)
+    await (page.getByRole('link', { name: 'Logout' })).click();
+    await expect(page).toHaveURL('/login');
+  });
+  test('TC_05_register_already_used_email', async ({ page }) => {
+    const login = new LoginPage(page);
+    const homepage = new HomePage(page);
+
+    await homepage.OpenLoginPage();
+    await login.signUpInvalid()
+    await expect(page.getByText('Email Address already exist!')).toBeVisible();
   });
 });

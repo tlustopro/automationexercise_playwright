@@ -1,4 +1,5 @@
 import type { Page } from  '@playwright/test';
+import { faker } from '@faker-js/faker/locale/en';
 
 export class LoginPage{
     constructor(public page: Page){
@@ -25,6 +26,16 @@ export class LoginPage{
         }
     
     async clickSignUpButton(){
+        await this.page.getByTestId('signup-button').click(); 
+        }
+    async logIn(email:string, password:string){
+        await this.page.getByTestId('login-email').fill(email);
+        await this.page.getByTestId('login-password').fill(password);  
+        await this.page.getByTestId('login-button').click(); 
+        }
+    async signUpInvalid(){
+        await this.page.getByPlaceholder('Name').fill(faker.person.fullName());
+        await this.page.getByTestId('signup-email').fill(process.env.USERNAME!);  
         await this.page.getByTestId('signup-button').click(); 
         }
 }
