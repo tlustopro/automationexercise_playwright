@@ -3,3 +3,4 @@
 vars/
 playwright.config.ts
 node_modules
+test-results/

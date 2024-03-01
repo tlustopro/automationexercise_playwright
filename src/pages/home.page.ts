@@ -12,8 +12,14 @@ export class HomePage{
       async OpenLoginPage() {
         await this.page.goto('/');
         await expect(this.page).toHaveTitle(/Automation Exercise/);
-        await this.page.getByRole('link', { name: ' Signup / Login' }).click();
+        await this.page.getByRole('link', { name: 'Signup / Login' }).click();
         await expect(this.page).toHaveTitle(/Automation Exercise - Signup/);
+      }
+      async OpenContactUsPage() {
+        await this.page.goto('/');
+        await expect(this.page).toHaveTitle(/Automation Exercise/);
+        await this.page.getByRole('link', { name: 'Contact us' }).click();
+        await expect(this.page).toHaveTitle(/Automation Exercise - Contact Us/);
       }
     
 }
