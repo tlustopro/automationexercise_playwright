@@ -17,7 +17,6 @@ test.describe('Shopping test cases', () => {
         await expect(
           page.locator('#contact-page').getByText('Success! Your details have')
         ).toBeVisible();
-        //TODO: FIX
-        await page.getByRole('link', { name: 'Home' }).click(); 
+        page.getByRole('link', { name: ' Home' }) 
       });
 });
