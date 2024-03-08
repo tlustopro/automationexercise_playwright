@@ -20,6 +20,7 @@ export class HomePage{
         await expect(this.page).toHaveTitle(/Automation Exercise/);
         await this.page.getByRole('link', { name: 'Contact us' }).click();
         await expect(this.page).toHaveTitle(/Automation Exercise - Contact Us/);
+        await this.page.waitForLoadState('networkidle')
       }
     
 }
